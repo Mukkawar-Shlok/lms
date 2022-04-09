@@ -35,22 +35,9 @@ mongoose.connect(dbURL)
     .catch((error) => console.log(error));
 
 
-//cookies
-
-app.get('/set-cookies', (req, res) => {
-
-    res.cookie('newUser', false, { httpOnly: true });
-    res.send('you got the cookies')
-})
-
-app.get('/read-cookies', (req, res) => {
-    const cookies = req.cookies;
-    console.log(cookies.newUser);
-    res.send(cookies)
-})
-
 app.get('/', (req, res) => {
     res.render('home')
+
 })
 
 app.use(authRo);

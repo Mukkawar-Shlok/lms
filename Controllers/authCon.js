@@ -1,6 +1,5 @@
-
-
 const User = require("../models/Mlogin");
+const jwt = require('jsonwebtoken')
 
 // handle errors
 const errHandler = (err) => {
@@ -26,6 +25,16 @@ const errHandler = (err) => {
     return errors;
 }
 
+//creating tokens
+const mage = 24 * 60 * 60;
+const createToken = (id) => {
+    return jwt.sign({ id }, 'naofumi', {
+        expiresIn: mage
+    })
+}
+
+
+
 // controller actions
 module.exports.signup_get = (req, res) => {
     res.render('sign');
@@ -40,7 +49,9 @@ module.exports.signup_post = async (req, res) => {
 
     try {
         const user = await User.create({ name, email, password });
-        res.status(201).json(user);
+        const token = createToken(user._id);
+        res.cookie('jwt', token, { httpOnly: true, mage: mage * 1000 })
+        res.status(201).json({ user: user._id });
     }
     catch (err) {
         const errors = errHandler(err);
