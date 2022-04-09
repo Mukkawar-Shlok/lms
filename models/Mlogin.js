@@ -5,11 +5,10 @@ const { isEmail } = require('validator')
 const userSchema = new Schema({
     name: {
         type: String,
-        unique: true,
-        lowercase: true
-
+        lowercase: true,
     },
     email: {
+        unique: true,
         type: String,
         required: [true, 'Please enter Email'],
         validate: [isEmail, 'please enter a valid email']
@@ -20,6 +19,21 @@ const userSchema = new Schema({
         minlength: [4, 'Mininum password length is 4 ']
     }
 }, { timestamps: true });
+
+
+//fire after saving user
+userSchema.post('save', function (doc, next) {
+    console.log('new user', doc);
+    next();
+})
+
+//fire before saving new user
+//we are using simple function because if we use the arrow function we would't get the User instance in pre 
+userSchema.pre('save', function (next) {
+    console.log('user being created');
+    next();
+})
+
 
 const User = mongoose.model('user', userSchema);
 module.exports = User;
