@@ -1,7 +1,7 @@
 const mongoose = require('mongoose');
 const Schema = mongoose.Schema;
 const { isEmail } = require('validator')
-
+const bcrypt = require('bcrypt');
 const userSchema = new Schema({
     name: {
         type: String,
@@ -29,8 +29,9 @@ userSchema.post('save', function (doc, next) {
 
 //fire before saving new user
 //we are using simple function because if we use the arrow function we would't get the User instance in pre 
-userSchema.pre('save', function (next) {
-    console.log('user being created');
+userSchema.pre('save', async function (next) {
+    const salt = await bcrypt.genSalt();
+    this.password = await bcrypt.hash(this.password, salt);
     next();
 })
 
