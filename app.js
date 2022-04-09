@@ -1,7 +1,8 @@
 const express = require("express");
 const mongoose = require("mongoose");
 const User = require("./models/Mlogin");
-const authRo = require('./routes/authRoutes')
+const authRo = require('./routes/authRoutes');
+const cookieParser = require('cookie-parser');
 
 // const crypto = require('crypto');
 // const multer = require('multer');
@@ -21,6 +22,7 @@ app.use(express.urlencoded({ extended: true }));
 app.set('view engine', 'ejs')
 app.use(express.static('public'));
 app.use(express.json());
+app.use(cookieParser());
 
 //connecting to database
 const dbURL = 'mongodb+srv://Shlok:Shlok@cluster0.soeuo.mongodb.net/auth?retryWrites=true&w=majority'
@@ -33,22 +35,19 @@ mongoose.connect(dbURL)
     .catch((error) => console.log(error));
 
 
-// app.get('/login', (req, res) => {
-//     res.render('login')
-// })
+//cookies
 
-// app.post('/create', (req, res) => {
-//     const user = new User(req.body)
-//     user.save()
-//         .then(() => {
-//             res.redirect('login')
-//         })
-//         .catch((error) => {
-//             console.log(error);
-//         })
-// })
+app.get('/set-cookies', (req, res) => {
 
-// app.post('/find')
+    res.cookie('newUser', false, { httpOnly: true });
+    res.send('you got the cookies')
+})
+
+app.get('/read-cookies', (req, res) => {
+    const cookies = req.cookies;
+    console.log(cookies.newUser);
+    res.send(cookies)
+})
 
 app.get('/', (req, res) => {
     res.render('home')
