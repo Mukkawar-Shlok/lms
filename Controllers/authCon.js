@@ -87,3 +87,12 @@ module.exports.login_post = async (req, res) => {
     }
 
 }
+
+module.exports.logout_get = (req, res) => {
+    res.cookie('jwt', "", { mage: 0 });
+    res.redirect('/front')
+}
+
+module.exports.front_get = (req, res) => {
+    res.render('front')
+}

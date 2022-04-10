@@ -1,1 +1,9 @@
 <h1>dwdadad</h1>
+
+<% if (user){ %>
+    <li><a href="/logout">log out</a></li>
+    <li>welcome ,<%= user.name %>
+            <%} else {%>
+                <h1>Login brother </h1>
+                <%}%>
+    </li>

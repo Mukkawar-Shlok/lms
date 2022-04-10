@@ -1,4 +1,5 @@
 const jwt = require('jsonwebtoken');
+const User = require('../models/Mlogin');
 
 const reAuth = (req, res, next) => {
     const token = req.cookies.jwt;
@@ -20,4 +21,28 @@ const reAuth = (req, res, next) => {
     }
 }
 
-module.exports = { reAuth };
+
+//current user
+
+const checkuser = (req, res, next) => {
+    const token = req.cookies.jwt;
+    if (token) {
+        jwt.verify(token, 'naofumi', async (err, decodedtoken) => {
+            if (err) {
+                res.locals.user = null;
+                next();
+            } else {
+                let user = await User.findById(decodedtoken.id);
+                res.locals.user = user;
+                next();
+            }
+        });
+    } else {
+        res.locals.user = null;
+        next();
+    }
+};
+
+
+
+module.exports = { reAuth, checkuser };
