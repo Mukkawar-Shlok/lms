@@ -22,18 +22,16 @@
                     </div>
                     <div class="input-field">
                         <input type="text" placeholder="Enter your email" required name="email">
+                        <div class="eerror"></div>
                         <i class="uil uil-envelope icon"></i>
                     </div>
                     <div class="input-field">
                         <input type="password" class="password" placeholder="Enter your password" required
                             name="password">
-                        <i class="uil uil-lock icon"></i>
+                        <div class="perror">
+                            <i class="uil uil-lock icon"></i>
+                        </div>
                     </div>
-                    <!-- <div class="input-field">
-                        <input type="file" onchange="readURL(this)" accept="Image/*" class="image"
-                            placeholder="upload image" required name="image">
-                    </div> -->
-
                     <div class="input-field button">
                         <input type="submit" value="SignIn Now" ">
                     </div>
@@ -43,8 +41,17 @@
 <script>
 
     const form = document.querySelector('form')
+    const eError = document.querySelector('.eerror');
+    const pError = document.querySelector('.perror');
+
+
     form.addEventListener('submit', async (e) => {
         e.preventDefault();
+
+        //reset error statements
+        eError.textContent = "";
+        pError.textContent = "";
+
 
 
         //get the values
@@ -58,12 +65,19 @@
                 body: JSON.stringify({ name, email, password }),
                 headers: { 'Content-type': 'application/json' }
             })
-        }
-        catch (err) {
-            console.log(err);
-        }
+            const data = await res.json();
+            console.log(data);
+            if (data.errors) {
+                eError.textContent = data.errors.email;
+                eError.ariaPlaceholder = "";
+                pError.textContent = data.errors.password;
+                pError.ariaPlaceholder = "";
+                console.log(eError, pError);
+            } if (data.user) {
+                console.log(data.user, " wtf"); location.assign('/');
+            }
+        } catch (err) { console.log(err); }
     })
-
 </script>
 
 </html>
