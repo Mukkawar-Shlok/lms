@@ -44,13 +44,13 @@
 </body>
 <script>
     const form = document.querySelector('form');
-    const emailError = document.querySelector('.eerror');
-    const passwordError = document.querySelector('.perror');
+    const emailerror = document.querySelector('.eerror');
+    const passworderror = document.querySelector('.perror');
     form.addEventListener('submit', async (e) => {
         e.preventDefault();
         // reset errors
-        emailError.textContent = '';
-        passwordError.textContent = '';
+        emailerror.textContent = '';
+        passworderror.textContent = '';
         // get values
         const email = form.email.value;
         const password = form.password.value;
@@ -63,8 +63,8 @@
             const data = await res.json();
             console.log(data);
             if (data.errors) {
-                eerror.textContent = data.errors.email;
-                perror.textContent = data.errors.password;
+                emailerror.textContent = data.errors.email;
+                passworderror.textContent = data.errors.password;
             }
             if (data.user) {
                 location.assign('/');

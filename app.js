@@ -3,6 +3,7 @@ const mongoose = require("mongoose");
 const User = require("./models/Mlogin");
 const authRo = require('./routes/authRoutes');
 const cookieParser = require('cookie-parser');
+const { reAuth } = require("./middleware/authMiddle");
 
 // const crypto = require('crypto');
 // const multer = require('multer');
@@ -35,7 +36,7 @@ mongoose.connect(dbURL)
     .catch((error) => console.log(error));
 
 
-app.get('/', (req, res) => {
+app.get('/', reAuth, (req, res) => {
     res.render('home')
 
 })
