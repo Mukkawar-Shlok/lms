@@ -4,6 +4,7 @@ const User = require("./models/Mlogin");
 const authRo = require('./routes/authRoutes');
 const cookieParser = require('cookie-parser');
 const { reAuth, checkuser } = require("./middleware/authMiddle");
+const Task = require('./models/task')
 
 // const crypto = require('crypto');
 // const multer = require('multer');
@@ -38,9 +39,55 @@ mongoose.connect(dbURL)
 
 app.get("*", checkuser);
 
-app.get('/', reAuth, (req, res) => {
-    res.render('home')
-
+app.get("/home", (req, res) => {
+    res.render('home', { title: 'home' })
 })
+
+app.get('/', (req, res) => {
+    Task.find()
+        .then((result) => {
+            res.render('list', { maintitle: 'test', tasks: result })
+        })
+        .catch((error) => { console.log(error) })
+})
+
+app.get('/home/:id', (req, res) => {
+    const id = req.params.id;
+    // console.log(id);
+    Task.findById(id)
+        .then(result => {
+            res.render('details', { tasks: result, title: 'Details' });
+        })
+        .catch(err => {
+            console.log(err);
+        })
+})
+app.delete('/home/:id', async (req, res) => {
+    const id = req.params.id;
+    Task.findByIdAndDelete(id)
+        .then((result) => {
+            console.log('in delete then');
+            res.json({ redirect: '/home' })
+        })
+        .catch((err) => { console.log() })
+})
+
+
+app.get('/create', (req, res) => {
+    res.render('home', { title: 'create' })
+})
+
+app.post('/create', (req, res) => {
+    const task = new Task(req.body)
+
+    task.save()
+        .then((result) => {
+            res.redirect('/')
+        })
+        .catch((error) => {
+            console.log(error);
+        })
+})
+
 
 app.use(authRo);
