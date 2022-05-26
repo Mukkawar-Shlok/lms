@@ -9,7 +9,7 @@ const reAuth = (req, res, next) => {
         jwt.verify(token, 'naofumi', (err, decodedtoken) => {
             if (err) {
                 console.log(err.message);
-                res.redirec('/login');
+                res.redirect('/login');
             } else {
                 console.log(decodedtoken);
                 next();

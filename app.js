@@ -17,7 +17,7 @@ const Task = require('./models/task')
 
 
 //connecting to database
-const port = 3000;
+const port = process.env.PORT || 3000;
 const app = express()
 app.use(express.urlencoded({ extended: true }));
 
@@ -38,12 +38,13 @@ mongoose.connect(dbURL)
 
 
 app.get("*", checkuser);
+app.use(authRo);
 
-app.get("/home", (req, res) => {
+app.get("/home", reAuth, (req, res) => {
     res.render('home', { title: 'home' })
 })
 
-app.get('/', (req, res) => {
+app.get('/', reAuth, (req, res) => {
     Task.find()
         .then((result) => {
             res.render('list', { maintitle: 'test', tasks: result })
@@ -51,7 +52,7 @@ app.get('/', (req, res) => {
         .catch((error) => { console.log(error) })
 })
 
-app.get('/home/:id', (req, res) => {
+app.get('/home/:id', reAuth, (req, res) => {
     const id = req.params.id;
     // console.log(id);
     Task.findById(id)
@@ -62,7 +63,7 @@ app.get('/home/:id', (req, res) => {
             console.log(err);
         })
 })
-app.delete('/home/:id', async (req, res) => {
+app.delete('/home/:id', reAuth, async (req, res) => {
     const id = req.params.id;
     Task.findByIdAndDelete(id)
         .then((result) => {
@@ -73,11 +74,11 @@ app.delete('/home/:id', async (req, res) => {
 })
 
 
-app.get('/create', (req, res) => {
+app.get('/create', reAuth, (req, res) => {
     res.render('home', { title: 'create' })
 })
 
-app.post('/create', (req, res) => {
+app.post('/create', reAuth, (req, res) => {
     const task = new Task(req.body)
 
     task.save()
@@ -89,5 +90,6 @@ app.post('/create', (req, res) => {
         })
 })
 
-
-app.use(authRo);
+app.get('/course', reAuth, (req, res) => {
+    res.render('course')
+})
