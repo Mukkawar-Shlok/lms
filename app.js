@@ -41,7 +41,7 @@ app.get("*", checkuser);
 app.use(authRo);
 
 app.get("/home", reAuth, (req, res) => {
-    res.render('home', { title: 'home' })
+    res.render('home', { title: 'home|lmsstige2 ' })
 })
 
 app.get('/', reAuth, (req, res) => {
@@ -57,7 +57,7 @@ app.get('/home/:id', reAuth, (req, res) => {
     // console.log(id);
     Task.findById(id)
         .then(result => {
-            res.render('details', { tasks: result, title: 'Details' });
+            res.render('details', { tasks: result, title: 'Details|lmsstige2' });
         })
         .catch(err => {
             console.log(err);
@@ -75,7 +75,7 @@ app.delete('/home/:id', reAuth, async (req, res) => {
 
 
 app.get('/create', reAuth, (req, res) => {
-    res.render('home', { title: 'create' })
+    res.render('home', { title: 'Create|lmsstige2' })
 })
 
 app.post('/create', reAuth, (req, res) => {

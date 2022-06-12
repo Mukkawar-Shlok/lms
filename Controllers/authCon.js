@@ -1,5 +1,7 @@
 const User = require("../models/Mlogin");
-const jwt = require('jsonwebtoken')
+const jwt = require('jsonwebtoken');
+const { findById } = require("../models/Mlogin");
+
 
 // handle errors
 const errHandler = (err) => {
@@ -58,7 +60,6 @@ module.exports.login_get = (req, res) => {
 
 module.exports.signup_post = async (req, res) => {
     const { name, email, password } = req.body;
-
     try {
         const user = await User.create({ name, email, password });
         const token = createToken(user._id);
@@ -96,3 +97,17 @@ module.exports.logout_get = (req, res) => {
 module.exports.front_get = (req, res) => {
     res.render('front')
 }
+
+module.exports.profile_get = (req, res) => {
+
+    const token = req.cookies.jwt;
+    if (token) {
+        jwt.verify(token, 'naofumi', async (err, decodedtoken) => {
+            console.log(decodedtoken);
+            let user = await User.findById(decodedtoken.id);
+            res.render('profile', { title: 'Profile page|lmsstige2', user })
+        });
+    }
+}
+
+
